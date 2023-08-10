@@ -9,8 +9,8 @@ import cv2
 import time
 
 config_dict = {
-		'EXP_NAME': 'deeplabv3_voc_contrast',
-		'GPUS': 8,
+		'EXP_NAME': 'deeplabv3_voc_irn_contrast_32_0.0035',
+		'GPUS': 4,
 
 		'DATA_NAME': 'VOCDataset',
 		'DATA_YEAR': 2012,
@@ -26,7 +26,7 @@ config_dict = {
 		'DATA_RANDOMCROP': 512,
 		'DATA_RANDOMROTATION': 0,
 		'DATA_RANDOMFLIP': 0.5,
-		'DATA_PSEUDO_GT': '/root/semantic-segmentation-codebase/data/VOCdevkit/VOC2012/SegmentationClassAug',
+		'DATA_PSEUDO_GT': '/root/irn_pseudo_label',
 		
 		'MODEL_NAME': 'deeplabv3_contrast',
 		'MODEL_BACKBONE': 'resnet101',
@@ -41,12 +41,12 @@ config_dict = {
 		'MODEL_NUM_CLASSES': 21,
 		'MODEL_FREEZEBN': False,
 
-		'TRAIN_LR': 0.007,
+		'TRAIN_LR': 0.0035,
 		'TRAIN_MOMENTUM': 0.9,
 		'TRAIN_WEIGHT_DECAY': 4e-5,
 		'TRAIN_BN_MOM': 0.0003,
 		'TRAIN_POWER': 0.9,
-		'TRAIN_BATCHES': 16,
+		'TRAIN_BATCHES': 32,
 		'TRAIN_SHUFFLE': True,
 		'TRAIN_MINEPOCH': 0,
 		'TRAIN_ITERATION': 30000,
@@ -62,6 +62,5 @@ config_dict['ROOT_DIR'] = os.path.abspath(os.path.join(os.path.dirname("__file__
 config_dict['MODEL_SAVE_DIR'] = os.path.join(config_dict['ROOT_DIR'],'model',config_dict['EXP_NAME'])
 config_dict['TRAIN_CKPT'] = None
 config_dict['LOG_DIR'] = os.path.join(config_dict['ROOT_DIR'],'log',config_dict['EXP_NAME'])
-config_dict['TEST_CKPT'] = os.path.join(config_dict['ROOT_DIR'],'model/deeplabv3_voc_contrast/deeplabv3_resnet101_VOCDataset_itr30000_all.pth')
-
+config_dict['TEST_CKPT'] = os.path.join(config_dict['ROOT_DIR'],'model/deeplabv3_voc_irn_contrast_32_0.0035/deeplabv3_contrast_resnet101_VOCDataset_itr30000_all.pth')
 sys.path.insert(0, os.path.join(config_dict['ROOT_DIR'], 'lib'))

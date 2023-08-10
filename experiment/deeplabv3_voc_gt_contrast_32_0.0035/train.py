@@ -195,7 +195,7 @@ class ContrastCELoss(nn.Module):
         loss_contrast = self.contrast_criterion(embedding, target, predict)
 
         if with_embed is True:
-            return loss + self.loss_weight * loss_contrast
+            return loss + loss_contrast * 0.1
 
         return loss + 0 * loss_contrast  # just a trick to avoid errors in distributed training
 
@@ -224,7 +224,7 @@ class ContrastAuxCELoss(nn.Module):
         loss_contrast = self.contrast_criterion(embedding, target, predict)
 
         if with_embed is True:
-            return loss + self.loss_weight * loss_contrast
+            return loss + loss_contrast * 0.1
 
         return loss + 0 * loss_contrast  # just a trick to avoid errors in distributed training
 
@@ -286,7 +286,9 @@ def train_net():
 	with tqdm(total=max_itr) as pbar:
 		for epoch in range(cfg.TRAIN_MINEPOCH, max_epoch):
 			for i_batch, sample in enumerate(dataloader):
-
+       
+				with_embed = True if itr >= 5000 else False
+                
 				now_lr = adjust_lr(optimizer, itr, max_itr, cfg.TRAIN_LR, cfg.TRAIN_POWER)
 				optimizer.zero_grad()
 
@@ -295,7 +297,7 @@ def train_net():
 
 				with torch.cuda.amp.autocast():
 					pred1 = net(inputs.to(0))
-					loss = criterion(pred1, seg_label.to(0))
+					loss = criterion(pred1, seg_label.to(0), with_embed)
      
 				scaler.scale(loss).backward()
 				scaler.step(optimizer)
