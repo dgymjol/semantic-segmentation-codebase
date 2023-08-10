@@ -68,9 +68,8 @@ class deeplabv3_contrast(_deeplabv3):
 		feature = self.aspp(x[-1])
 		result = self.cls_conv(feature)
   
-		result = F.interpolate(result,(h,w),mode='bilinear', align_corners=True)
-		aux_result = F.interpolate(dsn,(h,w),mode='bilinear', align_corners=True)
+		# result = F.interpolate(result,(h,w),mode='bilinear', align_corners=True)
+		# aux_result = F.interpolate(dsn,(h,w),mode='bilinear', align_corners=True)
   
-		
-		return {'embed': embedding, 'seg_aux': aux_result, 'seg': result}
+		return {'embed': embedding, 'seg_aux': dsn, 'seg': result}
 

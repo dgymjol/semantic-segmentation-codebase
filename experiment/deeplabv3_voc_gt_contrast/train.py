@@ -145,19 +145,24 @@ class PixelContrastLoss(nn.Module):
         return loss
 
     def forward(self, feats, labels=None, predict=None):
-        breakpoint()
+        # (Pdb) labels.shape
+		# torch.Size([16, 512, 512])
+		# (Pdb) predict.shape
+		# torch.Size([16, 64, 64])
+		# (Pdb) feats.shape
+		# torch.Size([16, 256, 64, 64])
         labels = labels.unsqueeze(1).float().clone()
         labels = torch.nn.functional.interpolate(labels,
-                                                 (feats.shape[2], feats.shape[3]), mode='nearest')
-        labels = labels.squeeze(1).long()
+                                                 (feats.shape[2], feats.shape[3]), mode='nearest') #torch.Size([16, 1, 64, 64])
+        labels = labels.squeeze(1).long() #torch.Size([16, 64, 64])
         assert labels.shape[-1] == feats.shape[-1], '{} {}'.format(labels.shape, feats.shape)
 
         batch_size = feats.shape[0]
 
-        labels = labels.contiguous().view(batch_size, -1)
-        predict = predict.contiguous().view(batch_size, -1)
-        feats = feats.permute(0, 2, 3, 1)
-        feats = feats.contiguous().view(feats.shape[0], -1, feats.shape[-1])
+        labels = labels.contiguous().view(batch_size, -1) #torch.Size([16, 4096])
+        predict = predict.contiguous().view(batch_size, -1) #torch.Size([16, 4096])
+        feats = feats.permute(0, 2, 3, 1) #torch.Size([16, 64, 64, 256])
+        feats = feats.contiguous().view(feats.shape[0], -1, feats.shape[-1]) # torch.Size([16, 4096, 256])
 
         feats_, labels_ = self._hard_anchor_sampling(feats, labels, predict)
 
@@ -203,19 +208,17 @@ class ContrastAuxCELoss(nn.Module):
         self.contrast_criterion = PixelContrastLoss()
 
     def forward(self, preds, target, with_embed=False):
-        breakpoint()
         h, w = target.size(1), target.size(2)
 
         seg = preds['seg']
         seg_aux = preds['seg_aux']
         embedding = preds['embed']
 
-        # pred = F.interpolate(input=seg, size=(h, w), mode='bilinear', align_corners=True)
-        # pred_aux = F.interpolate(input=seg_aux, size=(h, w), mode='bilinear', align_corners=True)
-        # loss = self.seg_criterion([pred_aux, pred], target)
+        pred = F.interpolate(input=seg, size=(h, w), mode='bilinear', align_corners=True)
+        pred_aux = F.interpolate(input=seg_aux, size=(h, w), mode='bilinear', align_corners=True)
+        loss = self.seg_criterion(pred_aux, target) + self.seg_criterion(pred, target)
         
-        loss = self.seg_criterion(seg_aux, target) + self.seg_criterion(seg, target)
-        
+        # loss = self.seg_criterion(seg_aux, target) + self.seg_criterion(seg, target)
 
         _, predict = torch.max(seg, 1)
         loss_contrast = self.contrast_criterion(embedding, target, predict)
@@ -292,7 +295,6 @@ def train_net():
 
 				with torch.cuda.amp.autocast():
 					pred1 = net(inputs.to(0))
-					# breakpoint()
 					loss = criterion(pred1, seg_label.to(0))
      
 				scaler.scale(loss).backward()
@@ -311,14 +313,14 @@ def train_net():
 					label_color1 = dataset.label2colormap(label1).transpose((2,0,1))
 
 					n,c,h,w = inputs.size()
-					seg_vis1 = torch.argmax(pred1[-1], dim=0).detach().cpu().numpy()
-					seg_color1 = dataset.label2colormap(seg_vis1).transpose((2,0,1))
+					# seg_vis1 = torch.argmax(pred1[-1], dim=0).detach().cpu().numpy()
+					# seg_color1 = dataset.label2colormap(seg_vis1).transpose((2,0,1))
 
 					tblogger.add_scalar('loss', loss.item(), itr)
 					tblogger.add_scalar('lr', now_lr, itr)
 					tblogger.add_image('Input', inputs1, itr)
 					tblogger.add_image('Label', label_color1, itr)
-					tblogger.add_image('SEG1', seg_color1, itr)
+					# tblogger.add_image('SEG1', seg_color1, itr)
 				itr += 1
 				if itr>=max_itr:
 					break
