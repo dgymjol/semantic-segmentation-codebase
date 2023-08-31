@@ -57,7 +57,7 @@ class RandomCrop(object):
 						 img[img_top:img_top+ch, img_left:img_left+cw]
 				#img_crop = img[img_top:img_top+ch, img_left:img_left+cw]
 				sample[key] = img_crop
-			elif 'segmentation' == key:
+			elif 'segmentation' == key or 'gt' == key:
 				seg = sample[key]
 				seg_crop = np.ones((self.output_size[0], self.output_size[1]), np.float32)*255
 				seg_crop[cont_top:cont_top+ch, cont_left:cont_left+cw] = \
@@ -113,7 +113,7 @@ class RandomFlip(object):
 					img = sample[key]
 					img = np.flip(img, axis=1)
 					sample[key] = img
-				elif 'segmentation' == key:
+				elif 'segmentation' == key or 'gt' == key:
 					seg = sample[key]
 					seg = np.flip(seg, axis=1)
 					sample[key] = seg
@@ -138,7 +138,7 @@ class RandomScale(object):
 				img = sample[key]
 				img = cv2.resize(img, None, fx=rand_scale, fy=rand_scale, interpolation=cv2.INTER_CUBIC)
 				sample[key] = img
-			elif 'segmentation' == key:
+			elif 'segmentation' == key or 'gt' == key:
 				seg = sample[key]
 				seg = cv2.resize(seg, None, fx=rand_scale, fy=rand_scale, interpolation=self.seg_interpolation)
 				sample[key] = seg
@@ -199,9 +199,9 @@ class ToTensor(object):
 				edge = sample['edge']
 				sample['edge'] = torch.from_numpy(edge.astype(np.float32))
 				sample['edge'] = torch.unsqueeze(sample['edge'],0)
-			elif 'segmentation' == key:
-				segmentation = sample['segmentation']
-				sample['segmentation'] = torch.from_numpy(segmentation.astype(np.long))
+			elif 'segmentation' == key or 'gt' == key:
+				segmentation = sample[key]
+				sample[key] = torch.from_numpy(segmentation.astype(np.long))
 			elif 'segmentation_pseudo' in key:
 				segmentation_pseudo = sample[key]
 				sample[key] = torch.from_numpy(segmentation_pseudo.astype(np.float32))

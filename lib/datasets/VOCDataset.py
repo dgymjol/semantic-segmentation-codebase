@@ -28,7 +28,7 @@ class VOCDataset(BaseDataset):
 		self.eval_dir = os.path.join(self.root_dir,'eval_result',self.dataset_name,'Segmentation')
 		self.img_dir = os.path.join(self.dataset_dir, 'JPEGImages')
 		self.ann_dir = os.path.join(self.dataset_dir, 'Annotations')
-		self.seg_dir = os.path.join(self.dataset_dir, 'SegmentationClass')
+		self.seg_dir = os.path.join(self.dataset_dir, 'SegmentationClassAug')
 		self.set_dir = os.path.join(self.dataset_dir, 'ImageSets', 'Segmentation')
 		if cfg.DATA_PSEUDO_GT:
 			self.pseudo_gt_dir = cfg.DATA_PSEUDO_GT

@@ -62,6 +62,9 @@ class BaseDataset(Dataset):
 			return self.__transform__(sample)
 		elif self.cfg.DATA_PSEUDO_GT and idx>=split_idx and 'train' in self.period:
 			segmentation = self.load_pseudo_segmentation(idx)
+			if 'NEED_GT' in self.cfg.__dict__.keys() and self.cfg.NEED_GT:
+				gt = self.load_segmentation(idx)
+				sample['gt'] = gt
 		else:
 			segmentation = self.load_segmentation(idx)
 		sample['segmentation'] = segmentation

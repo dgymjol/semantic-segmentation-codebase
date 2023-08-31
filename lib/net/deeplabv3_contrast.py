@@ -44,32 +44,23 @@ class deeplabv3_contrast(_deeplabv3):
   
 		# for embeddings
 		dim_in = self.backbone.OUTPUT_DIM
-		proj_dim = 256
+		proj_dim = cfg.EMBEDDING_DIM
   
 		self.proj_head = nn.Sequential(nn.Conv2d(dim_in, dim_in, kernel_size=1),nn.BatchNorm2d(dim_in) ,nn.ReLU(), nn.Conv2d(dim_in, proj_dim, kernel_size=1))
   
-        # for auxiliary loss
-		self.layer_dsn = nn.Sequential(nn.Conv2d(1024, 256, kernel_size=3, stride=1, padding = 1),nn.BatchNorm2d(256) ,nn.ReLU(), nn.Conv2d(256, cfg.MODEL_NUM_CLASSES, kernel_size=1, stride=1, bias=True))
-        
         # org deeplabv3
 		self.cls_conv = nn.Conv2d(cfg.MODEL_ASPP_OUTDIM, cfg.MODEL_NUM_CLASSES, 1, 1, padding=0)
 		self.__initial__()
 
 	def forward(self, x):
 		n,c,h,w = x.size()
-		x = self.backbone(x)
-
-		# embeddings
-		embedding = F.normalize(self.proj_head(x[-1]), p=2, dim=1) # (B, 2048, 64, 64) -> B, 256, 64, 64)
-
-		# seg_aux
-		dsn = self.layer_dsn(x[-2]) # (B, 21, 64, 64)
-  
-		feature = self.aspp(x[-1])
+		x_bottom = self.backbone(x)[-1]
+		feature = self.aspp(x_bottom)
 		result = self.cls_conv(feature)
+		result = F.interpolate(result,(h,w),mode='bilinear', align_corners=True)
+		
+		# embeddings
+		embedding = F.normalize(self.proj_head(x_bottom), p=2, dim=1) # (B, 2048, 64, 64) -> (B, 256, 64, 64)
   
-		# result = F.interpolate(result,(h,w),mode='bilinear', align_corners=True)
-		# aux_result = F.interpolate(dsn,(h,w),mode='bilinear', align_corners=True)
-  
-		return {'embed': embedding, 'seg_aux': dsn, 'seg': result}
+		return {'embed': embedding, 'pred_seg': result}
 
