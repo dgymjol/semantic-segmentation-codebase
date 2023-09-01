@@ -9,7 +9,7 @@ import cv2
 import time
 
 config_dict = {
-		'EXP_NAME': 'deeplabv3_ddp_irn_bdcl_test3',
+		'EXP_NAME': 'deeplabv3_ddp_irn_bdcl_test1',
 		'GPUS': 2,
 
 		'DATA_NAME': 'VOCDataset',
@@ -65,7 +65,7 @@ config_dict = {
 		'TRIPLET_MARGIN' : 0.2, 
 		'NEED_GT' : True,
   
-		'TEMP' : 0.1,
+		'TEMP' : 0.3,
 		'EMBEDDING_DIN' : 256,
   
   
@@ -79,6 +79,6 @@ config_dict['ROOT_DIR'] = '/workspace/semantic-segmentation-codebase'
 config_dict['MODEL_SAVE_DIR'] = os.path.join(config_dict['ROOT_DIR'],'model',config_dict['EXP_NAME'])
 config_dict['TRAIN_CKPT'] = None
 config_dict['LOG_DIR'] = os.path.join(config_dict['ROOT_DIR'],'log',config_dict['EXP_NAME'])
-config_dict['TEST_CKPT'] = os.path.join(config_dict['ROOT_DIR'],'model/deeplabv3_ddp_irn_bdcl_test3/deeplabv3_contrast_resnet101_VOCDataset_itr30000_all.pth')
+config_dict['TEST_CKPT'] = os.path.join(config_dict['ROOT_DIR'],'model/deeplabv3_ddp_irn_bdcl_test1/deeplabv3_contrast_resnet101_VOCDataset_itr30000_all.pth')
 
 sys.path.insert(0, os.path.join(config_dict['ROOT_DIR'], 'lib'))

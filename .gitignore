@@ -1,7 +1,3 @@
 data
 *.pth
 **/__pycache__/
-
-
-
-**/deeplabv3_ddp_irn_bdcl_test1

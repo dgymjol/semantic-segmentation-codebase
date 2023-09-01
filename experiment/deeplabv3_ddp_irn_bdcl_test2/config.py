@@ -79,6 +79,6 @@ config_dict['ROOT_DIR'] = '/workspace/semantic-segmentation-codebase'
 config_dict['MODEL_SAVE_DIR'] = os.path.join(config_dict['ROOT_DIR'],'model',config_dict['EXP_NAME'])
 config_dict['TRAIN_CKPT'] = None
 config_dict['LOG_DIR'] = os.path.join(config_dict['ROOT_DIR'],'log',config_dict['EXP_NAME'])
-config_dict['TEST_CKPT'] = os.path.join(config_dict['ROOT_DIR'],'model/deeplabv3_ddp_irn_bdcl_test2/deeplabv3_resnet101_VOCDataset_itr30000_all.pth')
+config_dict['TEST_CKPT'] = os.path.join(config_dict['ROOT_DIR'],'model/deeplabv3_ddp_irn_bdcl_test2/deeplabv3_contrast_resnet101_VOCDataset_itr30000_all.pth')
 
 sys.path.insert(0, os.path.join(config_dict['ROOT_DIR'], 'lib'))
