@@ -18,12 +18,12 @@ class Configuration():
 		if self.GPUS == 0:
 			raise ValueError('config.py: the number of GPU is 0')
 		if self.GPUS != torch.cuda.device_count():
-			raise ValueError('config.py: GPU number is not matched')
+			raise ValueError(f'config.py: GPU number is not matched (config: {self.GPUS}, real: {torch.cuda.device_count()})')
 		if not os.path.isdir(self.LOG_DIR):
 			os.makedirs(self.LOG_DIR)
-		elif self.clear:
-			shutil.rmtree(self.LOG_DIR)
-			os.mkdir(self.LOG_DIR)
+		# elif self.clear:
+		# 	shutil.rmtree(self.LOG_DIR)
+		# 	os.mkdir(self.LOG_DIR)
 		if not os.path.isdir(self.MODEL_SAVE_DIR):
 			os.makedirs(self.MODEL_SAVE_DIR)
 
