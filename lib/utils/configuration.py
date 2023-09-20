@@ -21,9 +21,9 @@ class Configuration():
 			raise ValueError(f'config.py: GPU number is not matched (config: {self.GPUS}, real: {torch.cuda.device_count()})')
 		if not os.path.isdir(self.LOG_DIR):
 			os.makedirs(self.LOG_DIR)
-		# elif self.clear:
-		# 	shutil.rmtree(self.LOG_DIR)
-		# 	os.mkdir(self.LOG_DIR)
+		elif self.clear:
+			shutil.rmtree(self.LOG_DIR)
+			os.mkdir(self.LOG_DIR)
 		if not os.path.isdir(self.MODEL_SAVE_DIR):
 			os.makedirs(self.MODEL_SAVE_DIR)
 

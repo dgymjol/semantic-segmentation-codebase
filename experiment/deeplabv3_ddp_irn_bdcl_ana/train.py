@@ -422,8 +422,8 @@ def train_net():
 					seg_color1 = dataset.label2colormap(seg_vis1).transpose((2,0,1))
 
 					tblogger.add_scalar('loss', loss.item(), itr)
-					tblogger.add_scalar('neg_sim', loss.item(), itr)
-					tblogger.add_scalar('pos_sim', loss.item(), itr)
+					tblogger.add_scalar('neg_sim', neg_sim.item(), itr)
+					tblogger.add_scalar('pos_sim', pos_sim.item(), itr)
 					tblogger.add_scalar('lr', now_lr, itr)
 					tblogger.add_image('Input', inputs1, itr)
 					tblogger.add_image('Label', label_color1, itr)
