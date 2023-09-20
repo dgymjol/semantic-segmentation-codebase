@@ -59,7 +59,7 @@ config_dict = {
 		'SUPCON_LOSS_WEIGHT' : 0.1, 
   
 		'BDRY_LOSS' : True,
-		'BDRY_LOSS_WEIGHT' : 0.3,
+		'BDRY_LOSS_WEIGHT' : 0.1,
 		'NUM_ANCHORS' : 200,
 		'MEMORY_SIZE' : 5000,
 		'TRIPLET_MARGIN' : 0.2, 

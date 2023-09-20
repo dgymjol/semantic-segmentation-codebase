@@ -371,7 +371,7 @@ def train_net():
 					ce_loss = ce_fn(pred, seg_label)
 					# bdry_loss = 0
 					# supcon_loss = 0
-					ce_loss_weight = 1
+					# ce_loss_weight = 1
      
 					if itr >= cfg.CONTRAST_WARMUP:
 						# Calculate triplet loss using boundary information
@@ -379,7 +379,7 @@ def train_net():
 						if cfg.BDRY_LOSS:
 							bdry_loss = bdry_fn(pred, feat, seg_label, sample['gt'].cuda())
 							bdry_loss *= cfg.BDRY_LOSS_WEIGHT
-							ce_loss_weight -= cfg.BDRY_LOSS_WEIGHT
+							# ce_loss_weight -= cfg.BDRY_LOSS_WEIGHT
 					else:
 						bdry_loss = 0 * bdry_fn(pred, feat, seg_label, sample['gt'].cuda())
 
@@ -398,7 +398,9 @@ def train_net():
 						# 	supcon_loss *= cfg.SUPCON_LOSS_WEIGHT
 						# 	ce_loss_weight -= cfg.SUPCON_LOSS_WEIGHT
 
-					loss = ce_loss * ce_loss_weight + bdry_loss
+					# loss = ce_loss * ce_loss_weight + bdry_loss
+					loss = ce_loss + bdry_loss
+
 
 				scaler.scale(loss).backward()
 				scaler.step(optimizer)
